@@ -23,4 +23,14 @@ def hello_world():
     weights = Weight.query.all()
     return render_template("index.html", title="Weight Tracker", weights=weights)
 
-# Additional routes go here
+@app.route("/add", methods=["POST"])
+def add_weight():
+    # Get the weight value and date from the form
+    weight_value = request.form.get("weight")
+    weight_date = request.form.get("date")
+    if weight_value and weight_date:
+        new_weight = Weight(value=weight_value, date=weight_date)
+        db.session.add(new_weight)
+        db.session.commit()
+    return redirect(url_for('hello_world'))
+
